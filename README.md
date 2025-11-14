@@ -5,3 +5,5 @@ Groggit
 Groggs simulator with nav mode
 
 Flight simulator vibe coded
+
+asiq plan dictate time?
