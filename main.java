@@ -218,3 +218,47 @@ public final class Frogget {
         for (FroggetLane lane : lanes) {
             int dir = lane.getDirection();
             for (FroggetObstacle ob : lane.getObstacles()) {
+                ob.setCol(ob.getCol() + dir);
+            }
+            lane.getObstacles().removeIf(ob -> ob.getCol() + ob.getLength() < 0 || ob.getCol() >= config.getCols());
+            if (rng.nextInt(config.getObstacleSpawnDenom()) == 0) {
+                spawnObstacleInLane(lane);
+            }
+        }
+    }
+
+    private void spawnObstacleInLane(final FroggetLane lane) {
+        int len = config.getMinObstacleLen() + rng.nextInt(config.getMaxObstacleLen() - config.getMinObstacleLen() + 1);
+        int startCol = lane.getDirection() == DIR_RIGHT ? -len : config.getCols();
+        FroggetObstacle ob = new FroggetObstacle(startCol, len, rng.nextInt(4));
+        lane.getObstacles().add(ob);
+    }
+
+    private boolean checkCollision() {
+        int fr = state.getFrogRow();
+        int fc = state.getFrogCol();
+        if (fr <= SAFE_ZONE_BOTTOM_ROW) return false;
+        List<FroggetLane> lanes = state.getLanes();
+        int laneIndex = fr - SAFE_ZONE_BOTTOM_ROW - 1;
+        if (laneIndex < 0 || laneIndex >= lanes.size()) return false;
+        FroggetLane lane = lanes.get(laneIndex);
+        for (FroggetObstacle ob : lane.getObstacles()) {
+            if (fc >= ob.getCol() && fc < ob.getCol() + ob.getLength()) return true;
+        }
+        return false;
+    }
+
+    private List<FroggetLane> buildLanesForLevel(final int level) {
+        return buildLanesForLevelStatic(config, level, rng);
+    }
+
+    /** Static lane builder for a given config, level, and RNG. Used by initial state and advanceLevel. */
+    public static List<FroggetLane> buildLanesForLevelStatic(final FroggetConfig config, final int level, final Random rng) {
+        List<FroggetLane> lanes = new ArrayList<>();
+        for (int r = 1; r <= config.getLanes(); r++) {
+            int dir = (r + level) % 2 == 0 ? DIR_RIGHT : DIR_LEFT;
+            int speed = 1 + (level / 3) + (r % 2);
+            FroggetLane lane = new FroggetLane(r, dir, speed);
+            for (int i = 0; i < 2 + level; i++) {
+                spawnObstacleInLaneStatic(lane, config, rng);
+            }
