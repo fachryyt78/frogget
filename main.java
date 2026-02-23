@@ -526,3 +526,47 @@ public final class Frogget {
         }
 
         public int getRow() { return row; }
+        public int getDirection() { return direction; }
+        public List<ObstacleSnapshot> getObstacles() { return obstacles; }
+    }
+
+    public static final class ObstacleSnapshot {
+        private final int col;
+        private final int length;
+
+        public ObstacleSnapshot(final int col, final int length) {
+            this.col = col;
+            this.length = length;
+        }
+
+        public int getCol() { return col; }
+        public int getLength() { return length; }
+    }
+
+    public FroggetSnapshot getSnapshot() {
+        List<LaneSnapshot> laneSnaps = new ArrayList<>();
+        for (FroggetLane lane : state.getLanes()) {
+            List<ObstacleSnapshot> obs = new ArrayList<>();
+            for (FroggetObstacle ob : lane.getObstacles()) {
+                obs.add(new ObstacleSnapshot(ob.getCol(), ob.getLength()));
+            }
+            laneSnaps.add(new LaneSnapshot(lane.getRow(), lane.getDirection(), obs));
+        }
+        return new FroggetSnapshot(
+            state.getFrogRow(),
+            state.getFrogCol(),
+            state.getLives(),
+            state.getScore(),
+            state.getLevel(),
+            state.isGameOver(),
+            state.isLevelComplete(),
+            laneSnaps
+        );
+    }
+
+    // -------------------------------------------------------------------------
+    // FroggetRuntimeException (error code carrier)
+    // -------------------------------------------------------------------------
+    public static final class FroggetRuntimeException extends RuntimeException {
+        private final String errorCode;
+
