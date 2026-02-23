@@ -306,3 +306,47 @@ public final class Frogget {
 
     // -------------------------------------------------------------------------
     // Inner: FroggetConfig (immutable)
+    // -------------------------------------------------------------------------
+    public static final class FroggetConfig {
+        private final int lanes;
+        private final int cols;
+        private final int frogStartRow;
+        private final int lives;
+        private final int ticksPerMove;
+        private final int maxLevel;
+        private final int pointsPerCross;
+        private final int pointsLevelBonus;
+        private final int obstacleSpawnDenom;
+        private final int minObstacleLen;
+        private final int maxObstacleLen;
+
+        public FroggetConfig(
+            final int lanes,
+            final int cols,
+            final int frogStartRow,
+            final int lives,
+            final int ticksPerMove,
+            final int maxLevel,
+            final int pointsPerCross,
+            final int pointsLevelBonus,
+            final int obstacleSpawnDenom,
+            final int minObstacleLen,
+            final int maxObstacleLen
+        ) {
+            this.lanes = lanes;
+            this.cols = cols;
+            this.frogStartRow = frogStartRow;
+            this.lives = lives;
+            this.ticksPerMove = ticksPerMove;
+            this.maxLevel = maxLevel;
+            this.pointsPerCross = pointsPerCross;
+            this.pointsLevelBonus = pointsLevelBonus;
+            this.obstacleSpawnDenom = obstacleSpawnDenom;
+            this.minObstacleLen = minObstacleLen;
+            this.maxObstacleLen = maxObstacleLen;
+        }
+
+        public int getLanes() { return lanes; }
+        public int getCols() { return cols; }
+        public int getRows() { return lanes + 2; }
+        public int getFrogStartRow() { return frogStartRow; }
