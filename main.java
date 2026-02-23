@@ -658,3 +658,47 @@ public final class Frogget {
         String head = encoded.split("\\|")[0];
         String[] parts = head.split(",");
         return parts.length >= 6 && Boolean.parseBoolean(parts[5]);
+    }
+
+    public static int getScoreFromEncoded(final String encoded) {
+        if (encoded == null || !encoded.contains("|")) return 0;
+        String[] parts = encoded.split("\\|")[0].split(",");
+        return parts.length >= 4 ? Integer.parseInt(parts[3]) : 0;
+    }
+
+    // -------------------------------------------------------------------------
+    // Validation helpers
+    // -------------------------------------------------------------------------
+    public boolean isFrogInSafeZoneTop() {
+        return state.getFrogRow() == SAFE_ZONE_TOP_ROW;
+    }
+
+    public boolean isFrogInSafeZoneBottom() {
+        return state.getFrogRow() == config.getFrogStartRow();
+    }
+
+    public boolean wouldCollideAt(final int row, final int col) {
+        if (row <= SAFE_ZONE_BOTTOM_ROW) return false;
+        int laneIndex = row - SAFE_ZONE_BOTTOM_ROW - 1;
+        List<FroggetLane> lanes = state.getLanes();
+        if (laneIndex < 0 || laneIndex >= lanes.size()) return false;
+        for (FroggetObstacle ob : lanes.get(laneIndex).getObstacles()) {
+            if (col >= ob.getCol() && col < ob.getCol() + ob.getLength()) return true;
+        }
+        return false;
+    }
+
+    public int getObstacleCount() {
+        int n = 0;
+        for (FroggetLane lane : state.getLanes()) {
+            n += lane.getObstacles().size();
+        }
+        return n;
+    }
+
+    public int getTotalObstacleLength() {
+        int n = 0;
+        for (FroggetLane lane : state.getLanes()) {
+            for (FroggetObstacle ob : lane.getObstacles()) {
+                n += ob.getLength();
+            }
