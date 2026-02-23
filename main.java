@@ -262,3 +262,47 @@ public final class Frogget {
             for (int i = 0; i < 2 + level; i++) {
                 spawnObstacleInLaneStatic(lane, config, rng);
             }
+            lanes.add(lane);
+        }
+        return lanes;
+    }
+
+    private static void spawnObstacleInLaneStatic(final FroggetLane lane, final FroggetConfig config, final Random rng) {
+        int len = config.getMinObstacleLen() + rng.nextInt(config.getMaxObstacleLen() - config.getMinObstacleLen() + 1);
+        int startCol = lane.getDirection() == DIR_RIGHT ? -len : config.getCols();
+        FroggetObstacle ob = new FroggetObstacle(startCol, len, rng.nextInt(4));
+        lane.getObstacles().add(ob);
+    }
+
+    public String toGridString() {
+        StringBuilder sb = new StringBuilder();
+        int rows = config.getLanes() + 2;
+        int cols = config.getCols();
+        for (int r = 0; r <= rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                if (r == state.getFrogRow() && c == state.getFrogCol()) {
+                    sb.append('F');
+                } else if (r == SAFE_ZONE_TOP_ROW || r == config.getFrogStartRow()) {
+                    sb.append('.');
+                } else {
+                    int li = r - SAFE_ZONE_BOTTOM_ROW - 1;
+                    boolean found = false;
+                    if (li >= 0 && li < state.getLanes().size()) {
+                        for (FroggetObstacle ob : state.getLanes().get(li).getObstacles()) {
+                            if (c >= ob.getCol() && c < ob.getCol() + ob.getLength()) {
+                                sb.append('X');
+                                found = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!found) sb.append('.');
+                }
+            }
+            sb.append('\n');
+        }
+        return sb.toString();
+    }
+
+    // -------------------------------------------------------------------------
+    // Inner: FroggetConfig (immutable)
