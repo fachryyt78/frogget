@@ -174,3 +174,47 @@ public final class Frogget {
     }
 
     public void tick() {
+        if (state.isGameOver()) return;
+        if (state.isLevelComplete()) return;
+        state.setTickCounter(state.getTickCounter() + 1);
+        if (state.getTickCounter() % config.getTicksPerMove() != 0) {
+            lastEventName = FROGGET_EVT_TICK;
+            lastEventCode = 4;
+            return;
+        }
+        updateLanes();
+        if (checkCollision()) {
+            state.setLives(state.getLives() - 1);
+            lastEventName = FROGGET_EVT_LIFE_LOST;
+            lastEventCode = 5;
+            if (state.getLives() <= 0) {
+                state.setGameOver(true);
+                lastEventName = FROGGET_EVT_GAME_OVER;
+                lastEventCode = 6;
+            } else {
+                resetFrogPosition();
+            }
+        }
+    }
+
+    public void advanceLevelIfComplete() {
+        if (!state.isLevelComplete() || state.isGameOver()) return;
+        state.setLevel(state.getLevel() + 1);
+        state.setLevelComplete(false);
+        state.addScore(config.getPointsLevelBonus());
+        resetFrogPosition();
+        state.setLanes(buildLanesForLevel(state.getLevel()));
+        lastEventName = FROGGET_EVT_LEVEL_UP;
+        lastEventCode = 7;
+    }
+
+    private void resetFrogPosition() {
+        state.setFrogRow(config.getFrogStartRow());
+        state.setFrogCol(config.getCols() / 2);
+    }
+
+    private void updateLanes() {
+        List<FroggetLane> lanes = state.getLanes();
+        for (FroggetLane lane : lanes) {
+            int dir = lane.getDirection();
+            for (FroggetObstacle ob : lane.getObstacles()) {
