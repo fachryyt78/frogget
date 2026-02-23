@@ -350,3 +350,47 @@ public final class Frogget {
         public int getCols() { return cols; }
         public int getRows() { return lanes + 2; }
         public int getFrogStartRow() { return frogStartRow; }
+        public int getLives() { return lives; }
+        public int getTicksPerMove() { return ticksPerMove; }
+        public int getMaxLevel() { return maxLevel; }
+        public int getPointsPerCross() { return pointsPerCross; }
+        public int getPointsLevelBonus() { return pointsLevelBonus; }
+        public int getObstacleSpawnDenom() { return obstacleSpawnDenom; }
+        public int getMinObstacleLen() { return minObstacleLen; }
+        public int getMaxObstacleLen() { return maxObstacleLen; }
+    }
+
+    // -------------------------------------------------------------------------
+    // Inner: FroggetState
+    // -------------------------------------------------------------------------
+    public static final class FroggetState {
+        private int frogRow;
+        private int frogCol;
+        private int lives;
+        private int score;
+        private int level;
+        private int tickCounter;
+        private boolean gameOver;
+        private boolean levelComplete;
+        private List<FroggetLane> lanes;
+
+        public static FroggetState initial(final FroggetConfig config) {
+            FroggetState s = new FroggetState();
+            s.frogRow = config.getFrogStartRow();
+            s.frogCol = config.getCols() / 2;
+            s.lives = config.getLives();
+            s.score = 0;
+            s.level = 1;
+            s.tickCounter = 0;
+            s.gameOver = false;
+            s.levelComplete = false;
+            s.lanes = Frogget.buildLanesForLevelStatic(config, 1, new Random(0));
+            return s;
+        }
+
+        public int getFrogRow() { return frogRow; }
+        public void setFrogRow(final int frogRow) { this.frogRow = frogRow; }
+        public int getFrogCol() { return frogCol; }
+        public void setFrogCol(final int frogCol) { this.frogCol = frogCol; }
+        public int getLives() { return lives; }
+        public void setLives(final int lives) { this.lives = lives; }
