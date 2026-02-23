@@ -394,3 +394,47 @@ public final class Frogget {
         public void setFrogCol(final int frogCol) { this.frogCol = frogCol; }
         public int getLives() { return lives; }
         public void setLives(final int lives) { this.lives = lives; }
+        public int getScore() { return score; }
+        public void addScore(final int n) { this.score += n; }
+        public int getLevel() { return level; }
+        public void setLevel(final int level) { this.level = level; }
+        public int getTickCounter() { return tickCounter; }
+        public void setTickCounter(final int tickCounter) { this.tickCounter = tickCounter; }
+        public boolean isGameOver() { return gameOver; }
+        public void setGameOver(final boolean gameOver) { this.gameOver = gameOver; }
+        public boolean isLevelComplete() { return levelComplete; }
+        public void setLevelComplete(final boolean levelComplete) { this.levelComplete = levelComplete; }
+        public List<FroggetLane> getLanes() { return lanes; }
+        public void setLanes(final List<FroggetLane> lanes) { this.lanes = lanes; }
+
+        public static FroggetState copyFrom(final FroggetState other) {
+            FroggetState s = new FroggetState();
+            s.frogRow = other.frogRow;
+            s.frogCol = other.frogCol;
+            s.lives = other.lives;
+            s.score = other.score;
+            s.level = other.level;
+            s.tickCounter = other.tickCounter;
+            s.gameOver = other.gameOver;
+            s.levelComplete = other.levelComplete;
+            s.lanes = new ArrayList<>();
+            for (FroggetLane lane : other.lanes) {
+                FroggetLane copy = new FroggetLane(lane.getRow(), lane.getDirection(), lane.getSpeed());
+                for (FroggetObstacle ob : lane.getObstacles()) {
+                    copy.getObstacles().add(new FroggetObstacle(ob.getCol(), ob.getLength(), ob.getSpriteId()));
+                }
+                s.lanes.add(copy);
+            }
+            return s;
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Inner: FroggetLane
+    // -------------------------------------------------------------------------
+    public static final class FroggetLane {
+        private final int row;
+        private final int direction;
+        private final int speed;
+        private final List<FroggetObstacle> obstacles;
+
