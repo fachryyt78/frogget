@@ -438,3 +438,47 @@ public final class Frogget {
         private final int speed;
         private final List<FroggetObstacle> obstacles;
 
+        public FroggetLane(final int row, final int direction, final int speed) {
+            this.row = row;
+            this.direction = direction;
+            this.speed = speed;
+            this.obstacles = new ArrayList<>();
+        }
+
+        public int getRow() { return row; }
+        public int getDirection() { return direction; }
+        public int getSpeed() { return speed; }
+        public List<FroggetObstacle> getObstacles() { return obstacles; }
+    }
+
+    // -------------------------------------------------------------------------
+    // Inner: FroggetObstacle
+    // -------------------------------------------------------------------------
+    public static final class FroggetObstacle {
+        private int col;
+        private final int length;
+        private final int spriteId;
+
+        public FroggetObstacle(final int col, final int length, final int spriteId) {
+            this.col = col;
+            this.length = length;
+            this.spriteId = spriteId;
+        }
+
+        public int getCol() { return col; }
+        public void setCol(final int col) { this.col = col; }
+        public int getLength() { return length; }
+        public int getSpriteId() { return spriteId; }
+    }
+
+    // -------------------------------------------------------------------------
+    // Snapshot for external consumers (e.g. web UI)
+    // -------------------------------------------------------------------------
+    public static final class FroggetSnapshot {
+        private final int frogRow;
+        private final int frogCol;
+        private final int lives;
+        private final int score;
+        private final int level;
+        private final boolean gameOver;
+        private final boolean levelComplete;
