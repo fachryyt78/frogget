@@ -86,3 +86,47 @@ public final class Frogget {
         this.rng = new Random(Objects.hash(FROGGET_DOMAIN_SEED, System.nanoTime()));
         this.config = new FroggetConfig(
             DEFAULT_LANES,
+            DEFAULT_COLS,
+            FROG_START_ROW,
+            INITIAL_LIVES,
+            TICKS_PER_MOVE,
+            MAX_LEVEL,
+            POINTS_PER_CROSS,
+            POINTS_LEVEL_BONUS,
+            OBSTACLE_SPAWN_DENOM,
+            MIN_OBSTACLE_LEN,
+            MAX_OBSTACLE_LEN
+        );
+        this.state = FroggetState.initial(config);
+        this.lastEventCode = 0;
+        this.lastEventName = "";
+    }
+
+    public Frogget(final long seed) {
+        this.rng = new Random(seed);
+        this.config = new FroggetConfig(
+            DEFAULT_LANES,
+            DEFAULT_COLS,
+            FROG_START_ROW,
+            INITIAL_LIVES,
+            TICKS_PER_MOVE,
+            MAX_LEVEL,
+            POINTS_PER_CROSS,
+            POINTS_LEVEL_BONUS,
+            OBSTACLE_SPAWN_DENOM,
+            MIN_OBSTACLE_LEN,
+            MAX_OBSTACLE_LEN
+        );
+        this.state = FroggetState.initial(config);
+        this.lastEventCode = 0;
+        this.lastEventName = "";
+    }
+
+    public FroggetConfig getConfig() {
+        return config;
+    }
+
+    public FroggetState getState() {
+        return state;
+    }
+
