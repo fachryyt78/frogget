@@ -570,3 +570,47 @@ public final class Frogget {
     public static final class FroggetRuntimeException extends RuntimeException {
         private final String errorCode;
 
+        public FroggetRuntimeException(final String errorCode) {
+            super(errorCode);
+            this.errorCode = errorCode;
+        }
+
+        public String getErrorCode() {
+            return errorCode;
+        }
+    }
+
+    public void moveUp() { moveFrog(-1, 0); }
+    public void moveDown() { moveFrog(1, 0); }
+    public void moveLeft() { moveFrog(0, -1); }
+    public void moveRight() { moveFrog(0, 1); }
+
+    public boolean isValidMove(final int dRow, final int dCol) {
+        if (state.isGameOver() || state.isLevelComplete()) return false;
+        int nr = state.getFrogRow() + dRow;
+        int nc = state.getFrogCol() + dCol;
+        return nr >= 0 && nr <= config.getRows() && nc >= 0 && nc < config.getCols();
+    }
+
+    public int getSafeZoneTopRow() { return SAFE_ZONE_TOP_ROW; }
+    public int getSafeZoneBottomRow() { return SAFE_ZONE_BOTTOM_ROW; }
+
+    // -------------------------------------------------------------------------
+    // High-score entry (immutable)
+    // -------------------------------------------------------------------------
+    public static final class FroggetHighScoreEntry {
+        private final int score;
+        private final int level;
+        private final long timestamp;
+
+        public FroggetHighScoreEntry(final int score, final int level, final long timestamp) {
+            this.score = score;
+            this.level = level;
+            this.timestamp = timestamp;
+        }
+
+        public int getScore() { return score; }
+        public int getLevel() { return level; }
+        public long getTimestamp() { return timestamp; }
+    }
+
