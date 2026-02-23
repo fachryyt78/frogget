@@ -482,3 +482,47 @@ public final class Frogget {
         private final int level;
         private final boolean gameOver;
         private final boolean levelComplete;
+        private final List<LaneSnapshot> lanes;
+
+        public FroggetSnapshot(
+            final int frogRow,
+            final int frogCol,
+            final int lives,
+            final int score,
+            final int level,
+            final boolean gameOver,
+            final boolean levelComplete,
+            final List<LaneSnapshot> lanes
+        ) {
+            this.frogRow = frogRow;
+            this.frogCol = frogCol;
+            this.lives = lives;
+            this.score = score;
+            this.level = level;
+            this.gameOver = gameOver;
+            this.levelComplete = levelComplete;
+            this.lanes = lanes == null ? Collections.emptyList() : new ArrayList<>(lanes);
+        }
+
+        public int getFrogRow() { return frogRow; }
+        public int getFrogCol() { return frogCol; }
+        public int getLives() { return lives; }
+        public int getScore() { return score; }
+        public int getLevel() { return level; }
+        public boolean isGameOver() { return gameOver; }
+        public boolean isLevelComplete() { return levelComplete; }
+        public List<LaneSnapshot> getLanes() { return lanes; }
+    }
+
+    public static final class LaneSnapshot {
+        private final int row;
+        private final int direction;
+        private final List<ObstacleSnapshot> obstacles;
+
+        public LaneSnapshot(final int row, final int direction, final List<ObstacleSnapshot> obstacles) {
+            this.row = row;
+            this.direction = direction;
+            this.obstacles = obstacles == null ? Collections.emptyList() : new ArrayList<>(obstacles);
+        }
+
+        public int getRow() { return row; }
