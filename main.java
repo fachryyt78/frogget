@@ -702,3 +702,47 @@ public final class Frogget {
             for (FroggetObstacle ob : lane.getObstacles()) {
                 n += ob.getLength();
             }
+        }
+        return n;
+    }
+
+    // -------------------------------------------------------------------------
+    // Contract identity accessors
+    // -------------------------------------------------------------------------
+    public static String getContractId() { return FROGGET_CONTRACT_ID; }
+    public static String getVersionHash() { return FROGGET_VERSION_HASH; }
+    public static String getDomainSeed() { return FROGGET_DOMAIN_SEED; }
+    public static int getChainId() { return FROGGET_CHAIN_ID; }
+    public static long getGenesisTs() { return FROGGET_GENESIS_TS; }
+
+    // -------------------------------------------------------------------------
+    // Difficulty presets (immutable configs)
+    // -------------------------------------------------------------------------
+    public static FroggetConfig presetEasy() {
+        return new FroggetConfig(5, 9, 6, 5, 6, 50, 150, 75, 7, 2, 3);
+    }
+
+    public static FroggetConfig presetNormal() {
+        return new FroggetConfig(DEFAULT_LANES, DEFAULT_COLS, FROG_START_ROW, INITIAL_LIVES, TICKS_PER_MOVE, MAX_LEVEL, POINTS_PER_CROSS, POINTS_LEVEL_BONUS, OBSTACLE_SPAWN_DENOM, MIN_OBSTACLE_LEN, MAX_OBSTACLE_LEN);
+    }
+
+    public static FroggetConfig presetHard() {
+        return new FroggetConfig(9, 13, 10, 2, 2, 99, 200, 100, 3, 3, 5);
+    }
+
+    // -------------------------------------------------------------------------
+    // FroggetInput (recorded input for replay / validation)
+    // -------------------------------------------------------------------------
+    public static final class FroggetInput {
+        private final int tick;
+        private final int dRow;
+        private final int dCol;
+
+        public FroggetInput(final int tick, final int dRow, final int dCol) {
+            this.tick = tick;
+            this.dRow = dRow;
+            this.dCol = dCol;
+        }
+
+        public int getTick() { return tick; }
+        public int getDRow() { return dRow; }
