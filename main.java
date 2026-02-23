@@ -878,3 +878,47 @@ public final class Frogget {
             if (game.getState().isLevelComplete()) {
                 game.advanceLevelIfComplete();
             }
+        }
+        return game.getState();
+    }
+
+    // -------------------------------------------------------------------------
+    // FroggetBuilder for custom config (optional; all defaults in constructor)
+    // -------------------------------------------------------------------------
+    public static final class FroggetBuilder {
+        private int lanes = DEFAULT_LANES;
+        private int cols = DEFAULT_COLS;
+        private int frogStartRow = FROG_START_ROW;
+        private int lives = INITIAL_LIVES;
+        private int ticksPerMove = TICKS_PER_MOVE;
+        private int maxLevel = MAX_LEVEL;
+        private int pointsPerCross = POINTS_PER_CROSS;
+        private int pointsLevelBonus = POINTS_LEVEL_BONUS;
+        private int obstacleSpawnDenom = OBSTACLE_SPAWN_DENOM;
+        private int minObstacleLen = MIN_OBSTACLE_LEN;
+        private int maxObstacleLen = MAX_OBSTACLE_LEN;
+        private Long seed = null;
+
+        public FroggetBuilder lanes(final int n) { this.lanes = n; return this; }
+        public FroggetBuilder cols(final int n) { this.cols = n; return this; }
+        public FroggetBuilder frogStartRow(final int n) { this.frogStartRow = n; return this; }
+        public FroggetBuilder lives(final int n) { this.lives = n; return this; }
+        public FroggetBuilder ticksPerMove(final int n) { this.ticksPerMove = n; return this; }
+        public FroggetBuilder maxLevel(final int n) { this.maxLevel = n; return this; }
+        public FroggetBuilder pointsPerCross(final int n) { this.pointsPerCross = n; return this; }
+        public FroggetBuilder pointsLevelBonus(final int n) { this.pointsLevelBonus = n; return this; }
+        public FroggetBuilder obstacleSpawnDenom(final int n) { this.obstacleSpawnDenom = n; return this; }
+        public FroggetBuilder minObstacleLen(final int n) { this.minObstacleLen = n; return this; }
+        public FroggetBuilder maxObstacleLen(final int n) { this.maxObstacleLen = n; return this; }
+        public FroggetBuilder seed(final long s) { this.seed = s; return this; }
+
+        public Frogget build() {
+            FroggetConfig cfg = new FroggetConfig(
+                lanes, cols, frogStartRow, lives, ticksPerMove, maxLevel,
+                pointsPerCross, pointsLevelBonus, obstacleSpawnDenom, minObstacleLen, maxObstacleLen
+            );
+            long s = seed != null ? seed : System.nanoTime();
+            return new Frogget(cfg, s);
+        }
+    }
+
