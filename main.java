@@ -746,3 +746,47 @@ public final class Frogget {
 
         public int getTick() { return tick; }
         public int getDRow() { return dRow; }
+        public int getDCol() { return dCol; }
+    }
+
+    private final List<FroggetInput> inputLog = new ArrayList<>();
+
+    public void moveFrogWithLog(final int dRow, final int dCol) {
+        inputLog.add(new FroggetInput(state.getTickCounter(), dRow, dCol));
+        moveFrog(dRow, dCol);
+    }
+
+    public List<FroggetInput> getInputLog() {
+        return Collections.unmodifiableList(inputLog);
+    }
+
+    public void clearInputLog() {
+        inputLog.clear();
+    }
+
+    // -------------------------------------------------------------------------
+    // Frame / animation constants (retro)
+    // -------------------------------------------------------------------------
+    public static final int ANIM_FROG_IDLE = 0;
+    public static final int ANIM_FROG_JUMP = 1;
+    public static final int ANIM_FROG_SQUASH = 2;
+    public static final int ANIM_CAR_FRAME_COUNT = 2;
+    public static final int ANIM_TICK_PER_FRAME = 2;
+    public static final int SOUND_CROSS = 0;
+    public static final int SOUND_SQUASH = 1;
+    public static final int SOUND_LEVEL = 2;
+    public static final int SOUND_GAME_OVER = 3;
+
+    public int getAnimationFrameForFrog() {
+        if (state.isGameOver()) return ANIM_FROG_SQUASH;
+        return lastEventCode == 2 ? ANIM_FROG_JUMP : ANIM_FROG_IDLE;
+    }
+
+    public int getAnimationFrameForObstacle(final int laneIndex, final int obstacleIndex) {
+        if (laneIndex < 0 || laneIndex >= state.getLanes().size()) return 0;
+        List<FroggetObstacle> obs = state.getLanes().get(laneIndex).getObstacles();
+        if (obstacleIndex < 0 || obstacleIndex >= obs.size()) return 0;
+        return (state.getTickCounter() / ANIM_TICK_PER_FRAME + obs.get(obstacleIndex).getSpriteId()) % ANIM_CAR_FRAME_COUNT;
+    }
+
+    // -------------------------------------------------------------------------
