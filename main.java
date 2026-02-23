@@ -834,3 +834,47 @@ public final class Frogget {
         if (s == null) return;
         state = FroggetState.copyFrom(s);
     }
+
+    // -------------------------------------------------------------------------
+    // Event code constants for external UI
+    // -------------------------------------------------------------------------
+    public static final int EVT_NONE = 0;
+    public static final int EVT_BOUNDS = 1;
+    public static final int EVT_MOVED = 2;
+    public static final int EVT_CROSSED = 3;
+    public static final int EVT_TICK = 4;
+    public static final int EVT_LIFE_LOST = 5;
+    public static final int EVT_GAME_OVER = 6;
+    public static final int EVT_LEVEL_UP = 7;
+
+    public String getLastEventDescription() {
+        switch (lastEventCode) {
+            case -1: return FROGGET_ERR_GAME_OVER;
+            case 1: return FROGGET_ERR_BOUNDS;
+            case 2: return FROGGET_EVT_MOVE;
+            case 3: return FROGGET_EVT_CROSSED;
+            case 4: return FROGGET_EVT_TICK;
+            case 5: return FROGGET_EVT_LIFE_LOST;
+            case 6: return FROGGET_EVT_GAME_OVER;
+            case 7: return FROGGET_EVT_LEVEL_UP;
+            default: return "";
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Replay: run a list of inputs for a given number of ticks (for testing / demo)
+    // -------------------------------------------------------------------------
+    public static FroggetState runReplay(final FroggetConfig config, final long seed, final List<FroggetInput> inputs, final int maxTicks) {
+        Frogget game = new Frogget(config, seed);
+        int tick = 0;
+        int inputIdx = 0;
+        while (tick < maxTicks && !game.getState().isGameOver()) {
+            while (inputIdx < inputs.size() && inputs.get(inputIdx).getTick() <= tick) {
+                FroggetInput in = inputs.get(inputIdx++);
+                game.moveFrog(in.getDRow(), in.getDCol());
+            }
+            game.tick();
+            tick++;
+            if (game.getState().isLevelComplete()) {
+                game.advanceLevelIfComplete();
+            }
