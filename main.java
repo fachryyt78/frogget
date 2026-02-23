@@ -130,3 +130,47 @@ public final class Frogget {
         return state;
     }
 
+    public int getLastEventCode() {
+        return lastEventCode;
+    }
+
+    public String getLastEventName() {
+        return lastEventName;
+    }
+
+    public void startNewGame() {
+        state = FroggetState.initial(config);
+        lastEventCode = 0;
+        lastEventName = "";
+        resetSessionStats();
+    }
+
+    public void moveFrog(final int dRow, final int dCol) {
+        if (state.isGameOver()) {
+            lastEventName = FROGGET_ERR_GAME_OVER;
+            lastEventCode = -1;
+            return;
+        }
+        if (state.isLevelComplete()) {
+            return;
+        }
+        int nr = state.getFrogRow() + dRow;
+        int nc = state.getFrogCol() + dCol;
+        if (nr < 0 || nr > config.getRows() || nc < 0 || nc >= config.getCols()) {
+            lastEventName = FROGGET_ERR_BOUNDS;
+            lastEventCode = 1;
+            return;
+        }
+        state.setFrogRow(nr);
+        state.setFrogCol(nc);
+        lastEventName = FROGGET_EVT_MOVE;
+        lastEventCode = 2;
+        if (nr == SAFE_ZONE_TOP_ROW) {
+            state.addScore(config.getPointsPerCross() + state.getLevel() * 10);
+            state.setLevelComplete(true);
+            lastEventName = FROGGET_EVT_CROSSED;
+            lastEventCode = 3;
+        }
+    }
+
+    public void tick() {
