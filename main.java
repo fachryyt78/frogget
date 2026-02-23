@@ -790,3 +790,47 @@ public final class Frogget {
     }
 
     // -------------------------------------------------------------------------
+    // Bounds and grid queries
+    // -------------------------------------------------------------------------
+    public int getGridRows() {
+        return config.getRows() + 1;
+    }
+
+    public int getGridCols() {
+        return config.getCols();
+    }
+
+    public boolean isInBounds(final int row, final int col) {
+        return row >= 0 && row <= config.getRows() && col >= 0 && col < config.getCols();
+    }
+
+    public int getLaneDirection(final int laneIndex) {
+        if (laneIndex < 0 || laneIndex >= state.getLanes().size()) return 0;
+        return state.getLanes().get(laneIndex).getDirection();
+    }
+
+    public int getLaneSpeed(final int laneIndex) {
+        if (laneIndex < 0 || laneIndex >= state.getLanes().size()) return 0;
+        return state.getLanes().get(laneIndex).getSpeed();
+    }
+
+    public List<ObstacleSnapshot> getObstaclesInLane(final int laneIndex) {
+        if (laneIndex < 0 || laneIndex >= state.getLanes().size()) return Collections.emptyList();
+        List<ObstacleSnapshot> out = new ArrayList<>();
+        for (FroggetObstacle ob : state.getLanes().get(laneIndex).getObstacles()) {
+            out.add(new ObstacleSnapshot(ob.getCol(), ob.getLength()));
+        }
+        return out;
+    }
+
+    // -------------------------------------------------------------------------
+    // Copy state (for undo / branch - deep copy of state and lanes)
+    // -------------------------------------------------------------------------
+    public FroggetState copyState() {
+        return FroggetState.copyFrom(state);
+    }
+
+    public void restoreState(final FroggetState s) {
+        if (s == null) return;
+        state = FroggetState.copyFrom(s);
+    }
