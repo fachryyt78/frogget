@@ -614,3 +614,47 @@ public final class Frogget {
         public long getTimestamp() { return timestamp; }
     }
 
+    // -------------------------------------------------------------------------
+    // High-score table (in-memory; single file does not persist to disk)
+    // -------------------------------------------------------------------------
+    private final List<FroggetHighScoreEntry> highScores = new ArrayList<>();
+
+    public List<FroggetHighScoreEntry> getHighScores() {
+        return Collections.unmodifiableList(highScores);
+    }
+
+    public void submitScoreIfHigh() {
+        if (state.isGameOver() && state.getScore() > 0) {
+            if (highScores.size() < HIGH_SCORE_CAP || state.getScore() > highScores.get(highScores.size() - 1).getScore()) {
+                highScores.add(new FroggetHighScoreEntry(state.getScore(), state.getLevel(), System.currentTimeMillis()));
+                highScores.sort((a, b) -> Integer.compare(b.getScore(), a.getScore()));
+                if (highScores.size() > HIGH_SCORE_CAP) {
+                    highScores.remove(highScores.size() - 1);
+                }
+            }
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Serialization: state to string (row,col,lives,score,level,gameOver,levelComplete|lane_data)
+    // -------------------------------------------------------------------------
+    public String encodeState() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(state.getFrogRow()).append(',').append(state.getFrogCol()).append(',')
+          .append(state.getLives()).append(',').append(state.getScore()).append(',').append(state.getLevel()).append(',')
+          .append(state.isGameOver()).append(',').append(state.isLevelComplete()).append('|');
+        for (FroggetLane lane : state.getLanes()) {
+            sb.append(lane.getRow()).append(';').append(lane.getDirection()).append(';');
+            for (FroggetObstacle ob : lane.getObstacles()) {
+                sb.append(ob.getCol()).append(',').append(ob.getLength()).append(';');
+            }
+            sb.append(' ');
+        }
+        return sb.toString();
+    }
+
+    public static boolean isGameOverFromEncoded(final String encoded) {
+        if (encoded == null || !encoded.contains("|")) return false;
+        String head = encoded.split("\\|")[0];
+        String[] parts = head.split(",");
+        return parts.length >= 6 && Boolean.parseBoolean(parts[5]);
