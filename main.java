@@ -42,3 +42,47 @@ public final class Frogget {
     public static final int SAFE_ZONE_BOTTOM_ROW = 8;
     public static final int MIN_OBSTACLE_LEN = 2;
     public static final int MAX_OBSTACLE_LEN = 4;
+    public static final int DIR_LEFT = -1;
+    public static final int DIR_RIGHT = 1;
+
+    public static final int SPRITE_FROG = 0;
+    public static final int SPRITE_CAR_RED = 1;
+    public static final int SPRITE_CAR_BLUE = 2;
+    public static final int SPRITE_TRUCK = 3;
+    public static final int SPRITE_LOG = 4;
+    public static final int PALETTE_GREEN = 0x2d5016;
+    public static final int PALETTE_ASPHALT = 0x1a1a1a;
+    public static final int PALETTE_WHITE = 0xe8e8e8;
+    public static final int PALETTE_FROG = 0x7cb342;
+    public static final int RETRO_TILE_PX = 16;
+    public static final int RETRO_FPS = 12;
+    public static final int HIGH_SCORE_CAP = 10;
+
+    // -------------------------------------------------------------------------
+    // Error / event name constants (unique naming)
+    // -------------------------------------------------------------------------
+    public static final String FROGGET_ERR_BOUNDS = "FroggetOutOfBounds";
+    public static final String FROGGET_ERR_COLLISION = "FroggetSquashed";
+    public static final String FROGGET_ERR_NO_LIVES = "FroggetNoLivesLeft";
+    public static final String FROGGET_ERR_INVALID_DIR = "FroggetInvalidDirection";
+    public static final String FROGGET_ERR_GAME_OVER = "FroggetGameOver";
+    public static final String FROGGET_EVT_LEVEL_UP = "FroggetLevelUp";
+    public static final String FROGGET_EVT_CROSSED = "FroggetSafeCross";
+    public static final String FROGGET_EVT_LIFE_LOST = "FroggetLifeLost";
+    public static final String FROGGET_EVT_GAME_OVER = "FroggetGameOver";
+    public static final String FROGGET_EVT_TICK = "FroggetTick";
+    public static final String FROGGET_EVT_MOVE = "FroggetMove";
+
+    // -------------------------------------------------------------------------
+    // Immutable config (constructor-set)
+    // -------------------------------------------------------------------------
+    private final FroggetConfig config;
+    private final Random rng;
+    private FroggetState state;
+    private int lastEventCode;
+    private String lastEventName;
+
+    public Frogget() {
+        this.rng = new Random(Objects.hash(FROGGET_DOMAIN_SEED, System.nanoTime()));
+        this.config = new FroggetConfig(
+            DEFAULT_LANES,
