@@ -1098,3 +1098,47 @@ public final class Frogget {
 
     public boolean canAdvanceLevel() {
         return state.isLevelComplete() && !state.isGameOver();
+    }
+
+    public int getRemainingLives() {
+        return Math.max(0, state.getLives());
+    }
+
+    // -------------------------------------------------------------------------
+    // Contract / domain checks (unique to Frogget)
+    // -------------------------------------------------------------------------
+    public static boolean isContractId(final String id) {
+        return FROGGET_CONTRACT_ID.equals(id);
+    }
+
+    public static boolean isVersionHash(final String hash) {
+        return FROGGET_VERSION_HASH.equals(hash);
+    }
+
+    public boolean isDomainConsistent() {
+        return config != null && state != null && state.getLanes() != null
+            && state.getLanes().size() == config.getLanes();
+    }
+
+    // -------------------------------------------------------------------------
+    // Retro display constants (for web UI)
+    // -------------------------------------------------------------------------
+    public static final int DISPLAY_CELL_W = 32;
+    public static final int DISPLAY_CELL_H = 32;
+    public static final int DISPLAY_MARGIN = 8;
+    public static final String FONT_FAMILY_RETRO = "Press Start 2P";
+    public static final int FONT_SIZE_PX = 14;
+
+    public int getDisplayWidthPx() {
+        return config.getCols() * DISPLAY_CELL_W + 2 * DISPLAY_MARGIN;
+    }
+
+    public int getDisplayHeightPx() {
+        return (config.getRows() + 1) * DISPLAY_CELL_H + 2 * DISPLAY_MARGIN;
+    }
+
+    // -------------------------------------------------------------------------
+    // Lifecycle flags for UI
+    // -------------------------------------------------------------------------
+    public boolean isPlaying() {
+        return !state.isGameOver() && !state.isLevelComplete();
