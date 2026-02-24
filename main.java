@@ -1186,3 +1186,47 @@ public final class Frogget {
     public void clearEventLog() {
         eventLog.clear();
     }
+
+    private void pushEvent(final int code, final String name) {
+        eventLog.add(new FroggetEvent(code, name, state.getTickCounter(), state.getFrogRow(), state.getFrogCol()));
+    }
+
+    // -------------------------------------------------------------------------
+    // Apply event logging to move/tick (call pushEvent where we set lastEventCode)
+    // -------------------------------------------------------------------------
+    public void moveFrogWithLogAndEvent(final int dRow, final int dCol) {
+        moveFrog(dRow, dCol);
+        pushEvent(lastEventCode, lastEventName);
+    }
+
+    public void tickWithEvent() {
+        tick();
+        pushEvent(lastEventCode, lastEventName);
+    }
+
+    // -------------------------------------------------------------------------
+    // Default obstacle positions for level 1 (for deterministic tests)
+    // -------------------------------------------------------------------------
+    public static List<LaneSnapshot> getDefaultLevel1Lanes(final FroggetConfig config) {
+        Frogget g = new Frogget(config, 0L);
+        g.startNewGame();
+        return g.getSnapshot().getLanes();
+    }
+
+    // -------------------------------------------------------------------------
+    // Equality of state (for testing)
+    // -------------------------------------------------------------------------
+    public boolean stateEquals(final Frogget other) {
+        if (other == null) return false;
+        FroggetState a = state;
+        FroggetState b = other.getState();
+        if (a.getFrogRow() != b.getFrogRow() || a.getFrogCol() != b.getFrogCol()) return false;
+        if (a.getLives() != b.getLives() || a.getScore() != b.getScore() || a.getLevel() != b.getLevel()) return false;
+        if (a.isGameOver() != b.isGameOver() || a.isLevelComplete() != b.isLevelComplete()) return false;
+        if (a.getLanes().size() != b.getLanes().size()) return false;
+        for (int i = 0; i < a.getLanes().size(); i++) {
+            FroggetLane la = a.getLanes().get(i);
+            FroggetLane lb = b.getLanes().get(i);
+            if (la.getObstacles().size() != lb.getObstacles().size()) return false;
+        }
+        return true;
