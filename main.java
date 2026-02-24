@@ -1274,3 +1274,47 @@ public final class Frogget {
             this.totalDeaths = totalDeaths;
             this.peakLevel = peakLevel;
             this.peakScore = peakScore;
+        }
+
+        public int getTotalMoves() { return totalMoves; }
+        public int getTotalCrosses() { return totalCrosses; }
+        public int getTotalDeaths() { return totalDeaths; }
+        public int getPeakLevel() { return peakLevel; }
+        public int getPeakScore() { return peakScore; }
+    }
+
+    private int sessionMoves;
+    private int sessionCrosses;
+    private int sessionDeaths;
+
+    public void resetSessionStats() {
+        sessionMoves = 0;
+        sessionCrosses = 0;
+        sessionDeaths = 0;
+    }
+
+    public FroggetStats getSessionStats() {
+        return new FroggetStats(sessionMoves, sessionCrosses, sessionDeaths, state.getLevel(), state.getScore());
+    }
+
+    public void recordMove() { sessionMoves++; }
+    public void recordCross() { sessionCrosses++; }
+    public void recordDeath() { sessionDeaths++; }
+
+    // -------------------------------------------------------------------------
+    // Integrate session stats into move/tick (optional; call from moveFrog/tick)
+    // -------------------------------------------------------------------------
+    public void moveFrogWithStats(final int dRow, final int dCol) {
+        moveFrog(dRow, dCol);
+        recordMove();
+        if (FROGGET_EVT_CROSSED.equals(lastEventName)) recordCross();
+    }
+
+    public void tickWithStats() {
+        int livesBefore = state.getLives();
+        tick();
+        if (state.getLives() < livesBefore) recordDeath();
+    }
+
+    // -------------------------------------------------------------------------
+    // Time-based tick (for fixed timestep game loop)
