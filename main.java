@@ -1362,3 +1362,47 @@ public final class Frogget {
         if (config.getTicksPerMove() < 1 || config.getTicksPerMove() > 20) return false;
         if (config.getMaxLevel() < 1 || config.getMaxLevel() > 999) return false;
         return true;
+    }
+
+    public boolean isConfigValid() {
+        return isValidConfig(config);
+    }
+
+    // -------------------------------------------------------------------------
+    // Debug / test helpers
+    // -------------------------------------------------------------------------
+    public String getStateDigest() {
+        return state.getFrogRow() + "," + state.getFrogCol() + " L" + state.getLevel() + " S" + state.getScore()
+            + " Lives" + state.getLives() + " Tick" + state.getTickCounter()
+            + (state.isGameOver() ? " GO" : "") + (state.isLevelComplete() ? " LC" : "");
+    }
+
+    public int getLaneCountForCurrentState() {
+        return state.getLanes() != null ? state.getLanes().size() : 0;
+    }
+
+    public boolean isFrogAtGoal() {
+        return state.getFrogRow() == SAFE_ZONE_TOP_ROW;
+    }
+
+    public int getScorePerCrossForCurrentLevel() {
+        return config.getPointsPerCross() + state.getLevel() * 10;
+    }
+
+    public static String formatContractIdShort() {
+        if (FROGGET_CONTRACT_ID == null || FROGGET_CONTRACT_ID.length() < 12) return FROGGET_CONTRACT_ID;
+        return FROGGET_CONTRACT_ID.substring(0, 10) + "..." + FROGGET_CONTRACT_ID.substring(FROGGET_CONTRACT_ID.length() - 8);
+    }
+
+    public int getSafeZoneTopRowConstant() { return SAFE_ZONE_TOP_ROW; }
+    public int getSafeZoneBottomRowConstant() { return SAFE_ZONE_BOTTOM_ROW; }
+    public static int getDefaultLanesConstant() { return DEFAULT_LANES; }
+    public static int getDefaultColsConstant() { return DEFAULT_COLS; }
+    public static int getInitialLivesConstant() { return INITIAL_LIVES; }
+    public static int getTicksPerMoveConstant() { return TICKS_PER_MOVE; }
+    public static int getPointsPerCrossConstant() { return POINTS_PER_CROSS; }
+    public static int getPointsLevelBonusConstant() { return POINTS_LEVEL_BONUS; }
+
+    public boolean hasWon() {
+        return state.isLevelComplete() && !state.isGameOver();
+    }
