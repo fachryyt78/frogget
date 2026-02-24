@@ -922,3 +922,47 @@ public final class Frogget {
         }
     }
 
+    public static FroggetBuilder builder() { return new FroggetBuilder(); }
+
+    /** Constructor with explicit config and seed (for builder and replay). */
+    public Frogget(final FroggetConfig config, final long seed) {
+        this.rng = new Random(seed);
+        this.config = config;
+        this.state = FroggetState.initial(config);
+        this.lastEventCode = 0;
+        this.lastEventName = "";
+    }
+
+    // -------------------------------------------------------------------------
+    // Grid cell type for UI
+    // -------------------------------------------------------------------------
+    public enum FroggetCellType { EMPTY, FROG, OBSTACLE, SAFE_TOP, SAFE_BOTTOM }
+
+    public FroggetCellType getCellType(final int row, final int col) {
+        if (row == state.getFrogRow() && col == state.getFrogCol()) return FroggetCellType.FROG;
+        if (row == SAFE_ZONE_TOP_ROW) return FroggetCellType.SAFE_TOP;
+        if (row == config.getFrogStartRow()) return FroggetCellType.SAFE_BOTTOM;
+        if (row > SAFE_ZONE_BOTTOM_ROW && row <= config.getRows()) {
+            int li = row - SAFE_ZONE_BOTTOM_ROW - 1;
+            if (li >= 0 && li < state.getLanes().size()) {
+                for (FroggetObstacle ob : state.getLanes().get(li).getObstacles()) {
+                    if (col >= ob.getCol() && col < ob.getCol() + ob.getLength()) return FroggetCellType.OBSTACLE;
+                }
+            }
+        }
+        return FroggetCellType.EMPTY;
+    }
+
+    public int getSpriteIdAt(final int row, final int col) {
+        if (row == state.getFrogRow() && col == state.getFrogCol()) return SPRITE_FROG;
+        if (row > SAFE_ZONE_BOTTOM_ROW && row <= config.getRows()) {
+            int li = row - SAFE_ZONE_BOTTOM_ROW - 1;
+            if (li >= 0 && li < state.getLanes().size()) {
+                for (FroggetObstacle ob : state.getLanes().get(li).getObstacles()) {
+                    if (col >= ob.getCol() && col < ob.getCol() + ob.getLength()) return ob.getSpriteId() + 1;
+                }
+            }
+        }
+        return -1;
+    }
+
