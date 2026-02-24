@@ -1318,3 +1318,47 @@ public final class Frogget {
 
     // -------------------------------------------------------------------------
     // Time-based tick (for fixed timestep game loop)
+    // -------------------------------------------------------------------------
+    public static final long TICK_MS = 1000 / RETRO_FPS;
+
+    public static int ticksFromElapsedMs(final long elapsedMs) {
+        return (int) (elapsedMs / TICK_MS);
+    }
+
+    // -------------------------------------------------------------------------
+    // Frogget contract identity (all in one place)
+    // -------------------------------------------------------------------------
+    public static String getContractInfo() {
+        return "Frogget v1 " + FROGGET_CONTRACT_ID + " " + FROGGET_VERSION_HASH;
+    }
+
+    // -------------------------------------------------------------------------
+    // Level description strings (for UI display)
+    // -------------------------------------------------------------------------
+    public static String getLevelDescription(final int level) {
+        if (level <= 0) return "Invalid level";
+        if (level <= 2) return "Easy. Few cars, slow pace.";
+        if (level <= 4) return "Medium. More traffic.";
+        if (level <= 6) return "Hard. Dense traffic.";
+        if (level <= 8) return "Very hard. Expert timing.";
+        return "Maximum difficulty.";
+    }
+
+    public static int getRecommendedLivesForLevel(final int level) {
+        if (level <= 2) return 5;
+        if (level <= 5) return 3;
+        return 2;
+    }
+
+    // -------------------------------------------------------------------------
+    // Validate config (for builder or external use)
+    // -------------------------------------------------------------------------
+    public static boolean isValidConfig(final FroggetConfig config) {
+        if (config == null) return false;
+        if (config.getLanes() < 1 || config.getLanes() > 20) return false;
+        if (config.getCols() < 5 || config.getCols() > 25) return false;
+        if (config.getFrogStartRow() < 0 || config.getFrogStartRow() >= config.getRows()) return false;
+        if (config.getLives() < 1 || config.getLives() > 10) return false;
+        if (config.getTicksPerMove() < 1 || config.getTicksPerMove() > 20) return false;
+        if (config.getMaxLevel() < 1 || config.getMaxLevel() > 999) return false;
+        return true;
