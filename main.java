@@ -966,3 +966,47 @@ public final class Frogget {
         return -1;
     }
 
+    // -------------------------------------------------------------------------
+    // Tick multiple times (convenience)
+    // -------------------------------------------------------------------------
+    public void tick(final int count) {
+        for (int i = 0; i < count; i++) {
+            tick();
+            if (state.isGameOver()) break;
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Level completion check and advance (single call for UI)
+    // -------------------------------------------------------------------------
+    public void tickAndAdvanceLevel() {
+        tick();
+        advanceLevelIfComplete();
+    }
+
+    // -------------------------------------------------------------------------
+    // Expected next obstacle spawn tick (approximate; depends on RNG)
+    // -------------------------------------------------------------------------
+    public int getTicksUntilNextPossibleSpawn() {
+        return config.getTicksPerMove() - (state.getTickCounter() % config.getTicksPerMove());
+    }
+
+    // -------------------------------------------------------------------------
+    // Contract fingerprint (hash-like string for verification)
+    // -------------------------------------------------------------------------
+    public static String getContractFingerprint() {
+        return FROGGET_CONTRACT_ID + "-" + FROGGET_VERSION_HASH + "-" + FROGGET_CHAIN_ID;
+    }
+
+    public String getStateFingerprint() {
+        return FROGGET_DOMAIN_SEED + "-" + state.getScore() + "-" + state.getLevel() + "-" + state.getTickCounter();
+    }
+
+    // -------------------------------------------------------------------------
+    // String renderer for console / debug (retro grid)
+    // -------------------------------------------------------------------------
+    public String toRetroGrid(final boolean showBounds) {
+        StringBuilder sb = new StringBuilder();
+        int cols = config.getCols();
+        for (int r = 0; r <= config.getRows(); r++) {
+            if (showBounds) sb.append('|');
