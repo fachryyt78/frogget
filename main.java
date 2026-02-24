@@ -1406,3 +1406,47 @@ public final class Frogget {
     public boolean hasWon() {
         return state.isLevelComplete() && !state.isGameOver();
     }
+
+    public boolean isActive() {
+        return !state.isGameOver();
+    }
+
+    public int getObstacleCountForLane(final int laneIndex) {
+        if (laneIndex < 0 || state.getLanes() == null || laneIndex >= state.getLanes().size()) return 0;
+        return state.getLanes().get(laneIndex).getObstacles().size();
+    }
+
+    public static int clampLevel(final int level, final FroggetConfig config) {
+        if (config == null) return Math.max(1, Math.min(level, MAX_LEVEL));
+        return Math.max(1, Math.min(level, config.getMaxLevel()));
+    }
+
+    public static int clampScore(final int score) {
+        return Math.max(0, score);
+    }
+
+    public int getCumulativeScoreIfAllLevelsCleared(final int upToLevel) {
+        int total = 0;
+        for (int l = 1; l <= upToLevel; l++) {
+            total += config.getPointsPerCross() + l * 10;
+            total += config.getPointsLevelBonus();
+        }
+        return total;
+    }
+
+    public static boolean isDefaultConfig(final FroggetConfig config) {
+        if (config == null) return false;
+        return config.getLanes() == DEFAULT_LANES && config.getCols() == DEFAULT_COLS
+            && config.getFrogStartRow() == FROG_START_ROW && config.getLives() == INITIAL_LIVES
+            && config.getTicksPerMove() == TICKS_PER_MOVE && config.getMaxLevel() == MAX_LEVEL;
+    }
+
+    public boolean isDefaultConfig() {
+        return isDefaultConfig(config);
+    }
+
+    public int getConfigLanes() { return config.getLanes(); }
+    public int getConfigCols() { return config.getCols(); }
+
+    public static int getMaxLevelConstant() { return MAX_LEVEL; }
+    public static int getMinObstacleLenConstant() { return MIN_OBSTACLE_LEN; }
