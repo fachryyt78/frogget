@@ -1054,3 +1054,47 @@ public final class Frogget {
         switch (key != null ? key.toLowerCase() : "") {
             case "arrowup": case "w": case "up": moveUp(); break;
             case "arrowdown": case "s": case "down": moveDown(); break;
+            case "arrowleft": case "a": case "left": moveLeft(); break;
+            case "arrowright": case "d": case "right": moveRight(); break;
+            default: break;
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // Safe zone checks
+    // -------------------------------------------------------------------------
+    public boolean isRowSafeZone(final int row) {
+        return row == SAFE_ZONE_TOP_ROW || row == config.getFrogStartRow();
+    }
+
+    public int getLaneIndexFromRow(final int row) {
+        if (row <= SAFE_ZONE_BOTTOM_ROW || row > config.getRows()) return -1;
+        return row - SAFE_ZONE_BOTTOM_ROW - 1;
+    }
+
+    public int getRowFromLaneIndex(final int laneIndex) {
+        if (laneIndex < 0 || laneIndex >= state.getLanes().size()) return -1;
+        return SAFE_ZONE_BOTTOM_ROW + 1 + laneIndex;
+    }
+
+    // -------------------------------------------------------------------------
+    // Obstacle iteration for UI
+    // -------------------------------------------------------------------------
+    public int getLaneCount() {
+        return state.getLanes() != null ? state.getLanes().size() : 0;
+    }
+
+    public int getObstacleCountInLane(final int laneIndex) {
+        if (laneIndex < 0 || laneIndex >= state.getLanes().size()) return 0;
+        return state.getLanes().get(laneIndex).getObstacles().size();
+    }
+
+    // -------------------------------------------------------------------------
+    // Score and level helpers
+    // -------------------------------------------------------------------------
+    public int getScoreToNextLevel() {
+        return config.getPointsPerCross() + state.getLevel() * 10;
+    }
+
+    public boolean canAdvanceLevel() {
+        return state.isLevelComplete() && !state.isGameOver();
