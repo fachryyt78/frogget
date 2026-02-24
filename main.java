@@ -1142,3 +1142,47 @@ public final class Frogget {
     // -------------------------------------------------------------------------
     public boolean isPlaying() {
         return !state.isGameOver() && !state.isLevelComplete();
+    }
+
+    public boolean isWaitingForLevelAdvance() {
+        return state.isLevelComplete() && !state.isGameOver();
+    }
+
+    public boolean isFinished() {
+        return state.isGameOver();
+    }
+
+    // -------------------------------------------------------------------------
+    // FroggetEvent (immutable event record for listeners)
+    // -------------------------------------------------------------------------
+    public static final class FroggetEvent {
+        private final int code;
+        private final String name;
+        private final int tick;
+        private final int frogRow;
+        private final int frogCol;
+
+        public FroggetEvent(final int code, final String name, final int tick, final int frogRow, final int frogCol) {
+            this.code = code;
+            this.name = name;
+            this.tick = tick;
+            this.frogRow = frogRow;
+            this.frogCol = frogCol;
+        }
+
+        public int getCode() { return code; }
+        public String getName() { return name; }
+        public int getTick() { return tick; }
+        public int getFrogRow() { return frogRow; }
+        public int getFrogCol() { return frogCol; }
+    }
+
+    private final List<FroggetEvent> eventLog = new ArrayList<>();
+
+    public List<FroggetEvent> getEventLog() {
+        return Collections.unmodifiableList(eventLog);
+    }
+
+    public void clearEventLog() {
+        eventLog.clear();
+    }
