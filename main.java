@@ -1010,3 +1010,47 @@ public final class Frogget {
         int cols = config.getCols();
         for (int r = 0; r <= config.getRows(); r++) {
             if (showBounds) sb.append('|');
+            for (int c = 0; c < cols; c++) {
+                FroggetCellType t = getCellType(r, c);
+                switch (t) {
+                    case FROG: sb.append('@'); break;
+                    case OBSTACLE: sb.append('#'); break;
+                    case SAFE_TOP: sb.append('^'); break;
+                    case SAFE_BOTTOM: sb.append('_'); break;
+                    default: sb.append('.');
+                }
+            }
+            if (showBounds) sb.append('|');
+            sb.append('\n');
+        }
+        return sb.toString();
+    }
+
+    public String toCompactState() {
+        return state.getFrogRow() + "," + state.getFrogCol() + " L" + state.getLevel() + " S" + state.getScore() + " " + state.getLives() + " lives";
+    }
+
+    // -------------------------------------------------------------------------
+    // Direction constants for input (key code: 1=up, 2=down, 3=left, 4=right)
+    // -------------------------------------------------------------------------
+    public static final int KEY_UP = 1;
+    public static final int KEY_DOWN = 2;
+    public static final int KEY_LEFT = 3;
+    public static final int KEY_RIGHT = 4;
+    public static final int KEY_NONE = 0;
+
+    public static int directionFromKey(final String key) {
+        if (key == null) return KEY_NONE;
+        switch (key.toLowerCase()) {
+            case "arrowup": case "w": case "up": return KEY_UP;
+            case "arrowdown": case "s": case "down": return KEY_DOWN;
+            case "arrowleft": case "a": case "left": return KEY_LEFT;
+            case "arrowright": case "d": case "right": return KEY_RIGHT;
+            default: return KEY_NONE;
+        }
+    }
+
+    public void moveFromKey(final String key) {
+        switch (key != null ? key.toLowerCase() : "") {
+            case "arrowup": case "w": case "up": moveUp(); break;
+            case "arrowdown": case "s": case "down": moveDown(); break;
