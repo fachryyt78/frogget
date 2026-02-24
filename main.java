@@ -1450,3 +1450,25 @@ public final class Frogget {
 
     public static int getMaxLevelConstant() { return MAX_LEVEL; }
     public static int getMinObstacleLenConstant() { return MIN_OBSTACLE_LEN; }
+    public static int getMaxObstacleLenConstant() { return MAX_OBSTACLE_LEN; }
+
+    public static String getErrBounds() { return FROGGET_ERR_BOUNDS; }
+    public static String getEvtCrossed() { return FROGGET_EVT_CROSSED; }
+
+    /** Returns true if the game is in a state where the player can move. */
+    public boolean canMove() { return !state.isGameOver() && !state.isLevelComplete(); }
+
+    public static void main(final String[] args) {
+        Frogget game = new Frogget();
+        System.out.println("Frogget " + FROGGET_CONTRACT_ID);
+        System.out.println("Level " + game.getState().getLevel() + " | Lives " + game.getState().getLives());
+        System.out.println(game.toGridString());
+        game.moveUp();
+        game.tick();
+        game.tick();
+        game.moveLeft();
+        System.out.println("After moves: " + game.getState().getFrogRow() + "," + game.getState().getFrogCol());
+        System.out.println("Score: " + game.getState().getScore());
+    }
+}
+
