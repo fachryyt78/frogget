@@ -1230,3 +1230,47 @@ public final class Frogget {
             if (la.getObstacles().size() != lb.getObstacles().size()) return false;
         }
         return true;
+    }
+
+    // -------------------------------------------------------------------------
+    // Hex color for palette (for web UI)
+    // -------------------------------------------------------------------------
+    public static String getPaletteGreenHex() { return String.format("#%06x", PALETTE_GREEN & 0xFFFFFF); }
+    public static String getPaletteAsphaltHex() { return String.format("#%06x", PALETTE_ASPHALT & 0xFFFFFF); }
+    public static String getPaletteFrogHex() { return String.format("#%06x", PALETTE_FROG & 0xFFFFFF); }
+    public static String getPaletteWhiteHex() { return String.format("#%06x", PALETTE_WHITE & 0xFFFFFF); }
+
+    // -------------------------------------------------------------------------
+    // Max possible score (approximate) for display
+    // -------------------------------------------------------------------------
+    public static int getMaxPossibleScore(final FroggetConfig config) {
+        return config.getMaxLevel() * (config.getPointsPerCross() + config.getPointsLevelBonus() + 100);
+    }
+
+    public int getMaxPossibleScore() {
+        return getMaxPossibleScore(config);
+    }
+
+    // -------------------------------------------------------------------------
+    // Next level threshold (score added when crossing)
+    // -------------------------------------------------------------------------
+    public int getPointsForNextCross() {
+        return config.getPointsPerCross() + state.getLevel() * 10;
+    }
+
+    // -------------------------------------------------------------------------
+    // FroggetStats (aggregate stats for a session)
+    // -------------------------------------------------------------------------
+    public static final class FroggetStats {
+        private final int totalMoves;
+        private final int totalCrosses;
+        private final int totalDeaths;
+        private final int peakLevel;
+        private final int peakScore;
+
+        public FroggetStats(final int totalMoves, final int totalCrosses, final int totalDeaths, final int peakLevel, final int peakScore) {
+            this.totalMoves = totalMoves;
+            this.totalCrosses = totalCrosses;
+            this.totalDeaths = totalDeaths;
+            this.peakLevel = peakLevel;
+            this.peakScore = peakScore;
